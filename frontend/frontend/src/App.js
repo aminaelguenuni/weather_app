@@ -1,38 +1,39 @@
-import { useState } from 'react';
-import axios from 'axios';
-import WeatherCard from './WeatherCard'; // direct import from src/
+import { useState } from "react";
+import axios from "axios";
+import WeatherCard from "./WeatherCard";
+import "./App.css"; // import the CSS
 
 function App() {
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
 
   const getWeather = async () => {
+    if (!city) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/weather?city=${city}`);
+      const res = await axios.get(
+        `http://localhost:5000/api/weather?city=${city}`
+      );
       setWeather(res.data);
     } catch {
-      setWeather({ error: 'City not found' });
+      setWeather({ error: "City not found" });
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-100 p-4">
-      <h1 className="text-3xl font-bold mb-4">Weather App</h1>
+    <div className="app">
+      <h1>Weather App</h1>
       <input
-        className="p-2 border rounded mb-2"
         type="text"
         placeholder="Enter city"
         value={city}
         onChange={(e) => setCity(e.target.value)}
+        className="city-input"
       />
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-        onClick={getWeather}
-      >
+      <button onClick={getWeather} className="search-btn">
         Search
       </button>
 
-      <WeatherCard weather={weather} />
+      {weather && <WeatherCard weather={weather} />}
     </div>
   );
 }
